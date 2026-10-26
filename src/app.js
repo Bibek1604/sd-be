@@ -18,7 +18,9 @@ app.use(cors(corsOptions));
 app.options("*", cors(corsOptions)); // answer preflights before any route/auth middleware
 app.use(express.json({ limit: config.bodyLimit }));
 
+// Mounted at both /api and / so a frontend whose base URL lacks the "/api" suffix still works.
 app.use("/api", apiRoutes);
+app.use("/", apiRoutes);
 
 // Must be registered after all routes
 app.use(notFound);
