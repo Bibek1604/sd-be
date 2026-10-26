@@ -59,7 +59,10 @@ const config = {
   bcryptSaltRounds: int("BCRYPT_SALT_ROUNDS", 12, { min: 8, max: 15 }),
 
   cors: {
-    origins: list("CORS_ORIGINS", ["http://localhost:5173"]),
+    // Browsers send Origin without a trailing slash, so strip it from configured values.
+    // Defaults to "*" (auth is a Bearer token, no cookies) so a deploy that forgot to
+    // set CORS_ORIGINS isn't blocked; set it to your frontend URL(s) to restrict.
+    origins: list("CORS_ORIGINS", ["*"]).map(o => o.replace(/\/+$/, "")),
   },
 
   bodyLimit: str("BODY_LIMIT", "100kb"),

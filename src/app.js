@@ -8,7 +8,14 @@ const app = express();
 
 app.disable("x-powered-by");
 // CORS_ORIGINS="*" allows any origin; otherwise only the listed origins.
-app.use(cors({ origin: config.cors.origins.includes("*") ? "*" : config.cors.origins }));
+const corsOptions = {
+  origin: config.cors.origins.includes("*") ? "*" : config.cors.origins,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  maxAge: 86400,
+};
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // answer preflights before any route/auth middleware
 app.use(express.json({ limit: config.bodyLimit }));
 
 app.use("/api", apiRoutes);
